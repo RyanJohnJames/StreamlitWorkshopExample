@@ -10,4 +10,4 @@ st.set_page_config(page_title="Home page", page_icon=":house:", layout="centered
 
 st.header("Welcome to my streamlit page!")
 st.warning("Note that all data used is generated using Numpy!")
-st.write("Feel free to look around even the code itself!")
+st.write("Feel free to look around and even the code itself!")
