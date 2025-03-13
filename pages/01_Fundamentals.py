@@ -48,3 +48,35 @@ with st.echo():
 
     st.write("Spinning Herta")
     st.video("images/herta.mp4", loop=True, autoplay=True)
+
+st.divider()
+
+st.header("st.code()")
+
+with st.echo():
+    code = """
+    def hello():
+    print("Hello world")
+    """
+
+    st.code(code, language="python")
+
+
+st.divider()
+
+st.header("st.echo() - the function I have been using this whole time!")
+with st.echo():
+    st.write("This will show the code!")
+    with st.echo():
+        st.write("This line will be shown")
+
+st.divider()
+
+st.header("st.markdown()")
+
+with st.echo():
+    st.markdown("""
+:red[We are making a website with this one!!!] :fire: :loudspeaker:
+           
+:blue-background[hello world] :earth_asia:
+""")
