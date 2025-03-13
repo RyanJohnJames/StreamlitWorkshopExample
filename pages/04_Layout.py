@@ -7,6 +7,14 @@ st.set_page_config(page_title="Layout", page_icon="🖥", layout="centered")
 
 st.title("Examples of layouts you can use")
 
+st.header("st.text_input()")
+with st.echo():
+    title = st.text_input("Daily goal", "take a shower")
+    st.write(f"your goal for today is to {title}!")
+
+st.divider()
+
+
 
 st.header("Adding lottie animations")
 with st.echo(): 

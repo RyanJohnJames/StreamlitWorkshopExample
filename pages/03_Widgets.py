@@ -6,6 +6,42 @@ st.set_page_config(page_title="Widgets", page_icon="🔧", layout="centered")
 
 st.title("Some of the widgets you can use")
 
+
+st.header("st.text_input()")
+with st.echo():
+    title = st.text_input("Daily goal", "take a shower")
+    st.write(f"your goal for today is to {title}!")
+
+st.subheader("using st.date_input() & st.time_input()")
+
+with st.echo():
+    import datetime
+
+    st.title("Time Machine :alarm_clock:")
+    st.subheader("Travel to the past or the future!")
+    d = st.date_input("Date to travel to:", datetime.date(2025, 2, 18))
+    t = st.time_input("Time to travel to:", datetime.time(23,59))
+    st.write("Travel to", d , "at", t)
+
+st.divider()
+
+st.header("Combing widgets (usiing slider + multiselect)")
+
+with st.echo():
+    df = pd.DataFrame({
+    'name' : ['John', 'Jane', 'Bob'],
+    'age' : [25, 30, 35],
+    'city' : ['NY', 'SF', 'LA']
+    })
+    min_age = st.slider("Minimum age", 0, 100, 0)
+    cities = st.multiselect("Select cities", df['city'].unique())
+    filtered_df = df[df['age'] >= min_age]
+    if cities:
+        filtered_df = filtered_df[filtered_df['city'].isin(cities)]
+        st.write(filtered_df)
+
+
+
 st.header("Persistant state")
 with st.echo():
     if 'counter' not in st.session_state:
