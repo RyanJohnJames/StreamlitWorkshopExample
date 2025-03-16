@@ -43,8 +43,10 @@ with st.echo():
     st.image("images/feixiao.jpeg", 
              "Feixiao from the hit game Honkai Star Rail.", 300)
     
-    st.write("Rick Astley - Never Gonna Give You Up")
-    st.audio("images/never.mp3", loop=True)
+    st.write("Tobu & Itro - Sunburst")
+    st.audio("images/sunburst.mp3", loop=True)
+    st.write("2016 roblox tycoon just hits different :fire:")
+
 
     st.write("Spinning Herta")
     st.video("images/herta.mp4", loop=True, autoplay=True)
