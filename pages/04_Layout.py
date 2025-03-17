@@ -1,4 +1,5 @@
 # TODO: heavily comment this version of the code for a guided project
+# TODO: make this shorter somehow
 import streamlit as st
 import pandas as pd
 import numpy as np
