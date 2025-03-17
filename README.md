@@ -22,7 +22,13 @@ git clone https://github.com/RyanJohnJames/streamlitexample.git
 cd streamlitexample
 ```
 
-3. Run the integrated script:
+5. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the integrated script:
 
 ```bash
 streamlit run 00_Home.py
