@@ -67,11 +67,9 @@ if page == "Home":
     with st.expander("Preview All Movies"):
         st.dataframe(movies_df.head(10))
 
-# Browse Movies page
+# Browse Movies page: move the following code to its own page
 elif page == "Browse Movies":
     st.title("Browse Movies")
-    
-    # Filters
     col1, col2, col3 = st.columns(3)
     with col1:
         genre_filter = st.selectbox("Genre", ["All"] + sorted(genres))
@@ -79,8 +77,6 @@ elif page == "Browse Movies":
         min_year_filter = st.number_input("Minimum Year", min_value=min(years), max_value=max(years), value=2010)
     with col3:
         min_rating_filter = st.slider("Minimum Rating", 1.0, 10.0, 6.0, 0.5)
-    
-    # Apply filters
     filtered_movies = movies_df.copy()
     if genre_filter != "All":
         filtered_movies = filtered_movies[filtered_movies["Genre"] == genre_filter]
@@ -88,53 +84,39 @@ elif page == "Browse Movies":
         (filtered_movies["Year"] >= min_year_filter) & 
         (filtered_movies["Rating"] >= min_rating_filter)
     ]
-    
-    # Show filtered movies
     st.write(f"Found {len(filtered_movies)} movies matching your criteria")
     st.dataframe(filtered_movies)
 
-# Recommendations page
+# Recommendations page: move the following code to its own page
 elif page == "Get Recommendations":
     st.title("Get Personalized Recommendations")
-    
-    # User preferences
     st.subheader("What kind of movies do you like?")
     fav_genre = st.selectbox("Favorite Genre", genres)
     min_rating = st.slider("Minimum Rating", 1.0, 10.0, 7.0, 0.5)
     recent_only = st.checkbox("Only movies from 2015 and later")
-    
     min_year = 2015 if recent_only else None
-    
-    # Generate recommendations
     if st.button("Generate Recommendations"):
         recommendations = recommend_movies(genre=fav_genre, min_rating=min_rating, min_year=min_year)
-        
         st.subheader("Your Recommendations")
         for i, (_, movie) in enumerate(recommendations.iterrows(), 1):
             st.write(f"{i}. **{movie['Title']}** ({movie['Year']}) - Rating: {movie['Rating']}/10")
 
-# Analytics page
+# Analytics page: move the following code to its own page
 elif page == "Analytics":
     st.title("Movie Analytics")
-    
-    # Simple analytics
     st.subheader("Ratings Distribution")
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.histplot(data=movies_df, x="Rating", bins=18, kde=True, ax=ax)
     st.pyplot(fig)
-    
     st.subheader("Movies by Genre")
     genre_counts = movies_df["Genre"].value_counts().reset_index()
     genre_counts.columns = ["Genre", "Count"]
-    
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.barplot(data=genre_counts, x="Genre", y="Count", ax=ax)
     plt.xticks(rotation=45)
     st.pyplot(fig)
-    
     st.subheader("Average Rating by Genre")
     avg_ratings = movies_df.groupby("Genre")["Rating"].mean().reset_index()
-    
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.barplot(data=avg_ratings, x="Genre", y="Rating", ax=ax)
     plt.xticks(rotation=45)
