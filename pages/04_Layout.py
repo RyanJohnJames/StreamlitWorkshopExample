@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 st.title("Movie Ratings Analysis Dashboard")
 np.random.seed(42)
 n_movies = 100

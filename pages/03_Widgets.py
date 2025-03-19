@@ -25,7 +25,7 @@ with st.echo():
 
 st.divider()
 
-st.header("Combing widgets (usiing slider + multiselect)")
+st.header("Combing widgets (using slider + multiselect)")
 
 with st.echo():
     df = pd.DataFrame({
