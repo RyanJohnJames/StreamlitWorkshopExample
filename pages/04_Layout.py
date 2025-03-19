@@ -1,20 +1,20 @@
-# TODO: heavily comment this version of the code for a guided project
-# TODO: make this shorter somehow
+"""
+Your task for this exercise is to modify the following code to be organized into
+different layouts.  
+
+"""
+
+# Ignore this block of code
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# Set page title
 st.title("Movie Ratings Analysis Dashboard")
-
-# Create sample movie dataset
 np.random.seed(42)
 n_movies = 100
 genres = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Animation"]
 years = list(range(2000, 2023))
-
 data = {
     "Title": [f"Movie {i}" for i in range(1, n_movies+1)],
     "Genre": np.random.choice(genres, n_movies),
@@ -24,41 +24,52 @@ data = {
     "Rating": np.random.uniform(1, 10, n_movies).round(1),
     "Runtime (min)": np.random.randint(75, 210, n_movies)
 }
-
-# Convert to DataFrame
 df = pd.DataFrame(data)
 df["Profit (millions)"] = df["Revenue (millions)"] - df["Budget (millions)"]
 
-# Show dataset
-st.header("Movie Dataset")
-st.write(df)
-
-# Filter controls
+#  TASK 4.1: Move the following components to an st.sidebar. 
 st.header("Filters")
 selected_genres = st.multiselect("Select genres:", options=genres, default=genres)
 min_year, max_year = st.slider("Year range:", min_value=min(years), max_value=max(years), value=(min(years), max(years)))
 min_rating = st.slider("Minimum rating:", min_value=1.0, max_value=10.0, value=1.0, step=0.1)
-
-# Filter the data
+st.markdown("---")
+with st.expander("About This Dashboard"):
+    st.write("""
+    This dashboard analyzes a dataset of movie ratings across different genres. 
+    Use the filters above to explore different subsets of the data.
+    """)
 filtered_df = df[
     (df["Genre"].isin(selected_genres)) &
     (df["Year"] >= min_year) & (df["Year"] <= max_year) &
     (df["Rating"] >= min_rating)
 ]
-
-# Show filtered data
-st.header("Filtered Dataset")
-st.write(filtered_df)
-
-# Display basic statistics
-st.header("Dataset Statistics")
-st.write(filtered_df.describe())
-
-# Genre Analysis
-st.header("Genre Analysis")
+st.markdown("---")
+st.write(f"Showing {len(filtered_df)} out of {len(df)} movies")
+csv = filtered_df.to_csv(index=False).encode('utf-8')
+st.download_button(
+    label="Download Filtered Data",
+    data=csv,
+    file_name="filtered_movies.csv",
+    mime="text/csv",
+)
+# ------------------------------------------------------------
+# TAB 1: Overview
+# TASK 4.2: Make each metric occupy 1 st.column.
+st.metric("Total Movies", len(filtered_df))
+st.metric("Average Rating", f"{filtered_df['Rating'].mean():.1f}")
+st.metric("Average Budget", f"${filtered_df['Budget (millions)'].mean():.1f}M")
+st.metric("Average Revenue", f"${filtered_df['Revenue (millions)'].mean():.1f}M")
+# ------------------------------------------------------------
+# TASK 4.3: Put each dataframe in an expander
+st.dataframe(filtered_df, use_container_width=True)
+st.dataframe(filtered_df.describe(), use_container_width=True)
+# ------------------------------------------------------------
+# TAB 2: Visualizations
+st.subheader("Movie Distribution")
+# TASK 4.4: Make each visualization occupy 1 st.column
+# This code is for the left column
 genre_counts = filtered_df["Genre"].value_counts().reset_index()
 genre_counts.columns = ["Genre", "Count"]
-
 fig1, ax1 = plt.subplots(figsize=(10, 6))
 sns.barplot(data=genre_counts, x="Genre", y="Count", ax=ax1)
 ax1.set_title("Number of Movies by Genre")
@@ -66,37 +77,7 @@ ax1.set_xlabel("Genre")
 ax1.set_ylabel("Count")
 plt.xticks(rotation=45)
 st.pyplot(fig1)
-
-# Year vs. Ratings Scatter Plot
-st.header("Year vs. Ratings")
-fig2, ax2 = plt.subplots(figsize=(10, 6))
-sns.scatterplot(data=filtered_df, x="Year", y="Rating", hue="Genre", size="Revenue (millions)", 
-                sizes=(20, 200), alpha=0.7, ax=ax2)
-ax2.set_title("Movie Ratings by Year and Genre")
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-st.pyplot(fig2)
-
-# Budget vs. Revenue Analysis
-st.header("Budget vs. Revenue")
-fig3, ax3 = plt.subplots(figsize=(10, 6))
-sns.scatterplot(data=filtered_df, x="Budget (millions)", y="Revenue (millions)", 
-                hue="Genre", size="Rating", sizes=(20, 200), alpha=0.7, ax=ax3)
-ax3.set_title("Budget vs. Revenue by Genre and Rating")
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-st.pyplot(fig3)
-
-# Top Rated Movies
-st.header("Top Rated Movies")
-top_movies = filtered_df.sort_values(by="Rating", ascending=False).head(10)
-st.write(top_movies[["Title", "Genre", "Year", "Rating"]])
-
-# Most Profitable Movies
-st.header("Most Profitable Movies")
-profitable_movies = filtered_df.sort_values(by="Profit (millions)", ascending=False).head(10)
-st.write(profitable_movies[["Title", "Genre", "Year", "Budget (millions)", "Revenue (millions)", "Profit (millions)"]])
-
-# Average Rating by Genre
-st.header("Average Rating by Genre")
+# this code is for the right column
 avg_rating = filtered_df.groupby("Genre")["Rating"].mean().reset_index()
 fig4, ax4 = plt.subplots(figsize=(10, 6))
 sns.barplot(data=avg_rating, x="Genre", y="Rating", ax=ax4)
@@ -105,12 +86,34 @@ ax4.set_xlabel("Genre")
 ax4.set_ylabel("Average Rating")
 plt.xticks(rotation=45)
 st.pyplot(fig4)
-
-# Runtime distribution
-st.header("Runtime Distribution")
+# ------------------------------------------------------------
+st.subheader("Movie Trends")
+# TASK 4.5: Make each visualization occupy 1 st.column
+# This code is for the left column
+fig2, ax2 = plt.subplots(figsize=(10, 6))
+sns.scatterplot(data=filtered_df, x="Year", y="Rating", hue="Genre", size="Revenue (millions)", 
+                sizes=(20, 200), alpha=0.7, ax=ax2)
+ax2.set_title("Movie Ratings by Year and Genre")
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+st.pyplot(fig2)
+# this code is for the right column
 fig5, ax5 = plt.subplots(figsize=(10, 6))
 sns.histplot(data=filtered_df, x="Runtime (min)", bins=20, kde=True, ax=ax5)
 ax5.set_title("Distribution of Movie Runtimes")
 ax5.set_xlabel("Runtime (minutes)")
 ax5.set_ylabel("Count")
 st.pyplot(fig5)
+# ------------------------------------------------------------
+# ignore the code below
+st.subheader("Budget vs. Revenue Analysis")
+fig3, ax3 = plt.subplots(figsize=(12, 7))
+sns.scatterplot(data=filtered_df, x="Budget (millions)", y="Revenue (millions)", 
+                hue="Genre", size="Rating", sizes=(20, 200), alpha=0.7, ax=ax3)
+ax3.set_title("Budget vs. Revenue by Genre and Rating")
+ax3.axline([0, 0], [1, 1], color='red', linestyle='--', alpha=0.7, label='Break-even line')
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+st.pyplot(fig3)
+# ------------------------------------------------------------
+
+# Task 4.6 Lastly, see the comments for TAB 2: Visualizations and TAB 1: Overview?
+# Use st.tabs to divide viewing of the partitions. 
