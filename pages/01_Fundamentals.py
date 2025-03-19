@@ -83,7 +83,7 @@ with st.echo():
 :blue-background[hello world] :earth_asia:
 """)
 
-st.divider
+st.divider()
 
 st.header("Adding lottie animations")
 with st.echo(): 
