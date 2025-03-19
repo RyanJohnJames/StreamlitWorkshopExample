@@ -30,37 +30,20 @@ if "movies_df" not in st.session_state:
 # Get data from session state
 movies_df = st.session_state.movies_df
 
-# Main content
 st.title("🎬 Movie Recommendation App")
-st.write("Welcome to the Movie Recommendation App! Use the navigation to explore movies.")
-
-# Page navigation with icons
-st.subheader("Navigation")
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.page_link("pages/05_PagesBrowse.py", label="Browse Movies", icon="🔍")
-with col2:
-    st.page_link("pages/05_PagesRecommend.py", label="Get Recommendations", icon="🎯")
-with col3:
-    st.page_link("pages/05_PagesAnalytics.py", label="Movie Analytics", icon="📊")
-
-# Show some stats
-st.subheader("Quick Stats")
+st.write("Welcome to the Movie Recommendation App! Use the sidebar to navigate.")
 col1, col2, col3 = st.columns(3)
 col1.metric("Total Movies", len(movies_df))
 col2.metric("Genres", len(movies_df["Genre"].unique()))
 col3.metric("Average Rating", f"{movies_df['Rating'].mean():.1f}/10")
-
-# Show random featured movie
 st.subheader("Featured Movie")
 featured = movies_df.sample(1).iloc[0]
 st.write(f"**{featured['Title']}** ({featured['Year']}) - {featured['Genre']}")
 st.write(f"Rating: {featured['Rating']}/10")
-
-# Preview of all movies
 with st.expander("Preview All Movies"):
     st.dataframe(movies_df.head(10))
 
+# add page links to the sidebar
 st.sidebar.page_link("pages/05_PagesHome.py", label="Home", icon="🏠")
 st.sidebar.page_link("pages/05_PagesBrowse.py", label="Browse Movies", icon="🔍", help="You are here")
 st.sidebar.page_link("pages/05_PagesRecommend.py", label="Get Recommendations", icon="🎯")

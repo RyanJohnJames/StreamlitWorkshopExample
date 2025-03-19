@@ -1,20 +1,14 @@
-# TODO: heavily comment this version of the code for a guided project
-# TODO: make this shorter somehow
+# setup code, can ignore
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# Page config
 st.set_page_config(page_title="Movie Recommendation App", layout="wide")
-
-# Create sample movie dataset
 np.random.seed(42)
 n_movies = 100
 genres = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Animation"]
 years = list(range(2000, 2023))
-
 data = {
     "Title": [f"Movie {i}" for i in range(1, n_movies+1)],
     "Genre": np.random.choice(genres, n_movies),
@@ -23,50 +17,26 @@ data = {
     "Director": [f"Director {i}" for i in range(1, 101)],
     "Popularity": np.random.uniform(1, 100, n_movies).round(1),
 }
-
-# Convert to DataFrame
 movies_df = pd.DataFrame(data)
-
-# Helper function for recommending movies
-def recommend_movies(genre=None, min_rating=None, min_year=None):
-    filtered_df = movies_df.copy()
-    
-    if genre:
-        filtered_df = filtered_df[filtered_df["Genre"] == genre]
-    
-    if min_rating:
-        filtered_df = filtered_df[filtered_df["Rating"] >= min_rating]
-        
-    if min_year:
-        filtered_df = filtered_df[filtered_df["Year"] >= min_year]
-    
-    return filtered_df.sort_values(by="Rating", ascending=False).head(10)
-
-# Sidebar navigation (currently just text)
+# ------------------------------------------------------------
+# Task 5.1: separate the following code into multiple pages.
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "Browse Movies", "Get Recommendations", "Analytics"])
-
-# Home page
+# Home page: move the following code to its own page
 if page == "Home":
     st.title("🎬 Movie Recommendation App")
     st.write("Welcome to the Movie Recommendation App! Use the sidebar to navigate.")
-    
-    # Show some stats
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Movies", len(movies_df))
     col2.metric("Genres", len(movies_df["Genre"].unique()))
     col3.metric("Average Rating", f"{movies_df['Rating'].mean():.1f}/10")
-    
-    # Show random featured movie
     st.subheader("Featured Movie")
     featured = movies_df.sample(1).iloc[0]
     st.write(f"**{featured['Title']}** ({featured['Year']}) - {featured['Genre']}")
     st.write(f"Rating: {featured['Rating']}/10")
-    
-    # Preview of all movies
     with st.expander("Preview All Movies"):
         st.dataframe(movies_df.head(10))
-
+# ------------------------------------------------------------
 # Browse Movies page: move the following code to its own page
 elif page == "Browse Movies":
     st.title("Browse Movies")
@@ -86,9 +56,18 @@ elif page == "Browse Movies":
     ]
     st.write(f"Found {len(filtered_movies)} movies matching your criteria")
     st.dataframe(filtered_movies)
-
+# ------------------------------------------------------------
 # Recommendations page: move the following code to its own page
 elif page == "Get Recommendations":
+    def recommend_movies(genre=None, min_rating=None, min_year=None):
+        filtered_df = movies_df.copy()
+        if genre:
+            filtered_df = filtered_df[filtered_df["Genre"] == genre]
+        if min_rating:
+            filtered_df = filtered_df[filtered_df["Rating"] >= min_rating]
+        if min_year:
+            filtered_df = filtered_df[filtered_df["Year"] >= min_year]
+        return filtered_df.sort_values(by="Rating", ascending=False).head(10)
     st.title("Get Personalized Recommendations")
     st.subheader("What kind of movies do you like?")
     fav_genre = st.selectbox("Favorite Genre", genres)
@@ -100,7 +79,7 @@ elif page == "Get Recommendations":
         st.subheader("Your Recommendations")
         for i, (_, movie) in enumerate(recommendations.iterrows(), 1):
             st.write(f"{i}. **{movie['Title']}** ({movie['Year']}) - Rating: {movie['Rating']}/10")
-
+# ------------------------------------------------------------
 # Analytics page: move the following code to its own page
 elif page == "Analytics":
     st.title("Movie Analytics")
@@ -121,3 +100,5 @@ elif page == "Analytics":
     sns.barplot(data=avg_ratings, x="Genre", y="Rating", ax=ax)
     plt.xticks(rotation=45)
     st.pyplot(fig)
+# ------------------------------------------------------------
+# Task 5.2: Add st.page_link to the sidebar for navigation between pages

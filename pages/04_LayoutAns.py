@@ -135,3 +135,25 @@ with tab2:
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     st.pyplot(fig3)
     # ------------------------------------------------------------
+
+
+import streamlit as st
+question = "Who are the student leaders in charge of BuildingBloCS this year?"
+options = ["London", "Berlin", "Paris", "Madrid"]
+correct_answer = "Paris"
+st.write(f"**Question:** {question}")
+selected_option = st.radio("Select your answer:", options, index=None, key='b')
+st.button("Submit", key='bgw')
+
+
+
+
+question = "Who are the student leaders in charge of BuildingBloCS this year?"
+options = ["London", "Berlin", "Paris", "Madrid"]
+correct_answer = "Paris"
+st.write(f"**Question:** {question}")
+col1, col2 = st.columns(2, vertical_alignment='bottom');
+with col1:
+    selected_option = st.radio("Select your answer:", options, index=None, key='c')
+with col2:  
+    st.button("Submit", key='rh')
